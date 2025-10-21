@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -26,34 +25,26 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-#NEW: (START) ##########################################################
       - name: Docker meta
-        id: docker_meta
+        id: meta
         uses: docker/metadata-action@v5
         with:
-          images: bretfisher/docker-ci-automation
+          images: harasani/dca
           flavor: |
             latest=false
           tags: |
-            type=raw,value=04
-            type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
-            type=ref,event=pr
-            type=ref,event=branch
-            type=semver,pattern={{version}}
-#NEW: (END) ############################################################
+            type=raw,value=v0.4.0
+            # type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
+            # type=ref,event=pr
+            # type=ref,event=branch
+            # type=semver,pattern={{version}}
       
       - name: Docker build
         uses: docker/build-push-action@v6
         with:
-#NEW: (START) ##########################################################
           push: true
-          tags: ${{ steps.docker_meta.outputs.tags }}
-          labels: ${{ steps.docker_meta.outputs.labels }}
-#NEW: (END) ############################################################
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          # comma seperated list of what OS and architechtures to build for (in parallel)
-          # default is linux/amd64 (the OS of the runner) but you can add more
-          # adding linux/arm64 is recommended for Apple Silicon, Raspberry Pi, AWS Graviton, etc.
-          # linux/arm/v7 is for 32-bit ARM devices like Raspberry Pi 2/3
           platforms: linux/amd64,linux/arm64
