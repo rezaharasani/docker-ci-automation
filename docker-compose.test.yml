@@ -1,5 +1,5 @@
 services:
-  allhands22:
+  dca:
     image: "${TESTING_IMAGE}"
   
   postgres:
@@ -12,12 +12,13 @@ services:
     healthcheck:
       test: /healthchecks/postgres-healthcheck
       interval: "5s"
+
   sut:
     image: "${TESTING_IMAGE}"
     depends_on:
-      allhands22:
+      dca:
         condition: service_started
       postgres:
         condition: service_healthy
-    # run all your tests here against the allhands22 service
-    command: curl --fail http://allhands22:80 || exit 1
+    # run all your tests here against the dca service
+    command: curl --fail http://dca:80 || exit 1
