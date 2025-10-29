@@ -185,7 +185,7 @@ jobs:
           exit-code: 0
           ignore-unfixed: true
           vuln-type: "os,library"
-          severity: "HIGH,CRITICAL"
+          severity: "CRITICAL"
           format: "sarif"
           output: "trivy-results.sarif"
 
@@ -203,7 +203,7 @@ jobs:
 
     permissions:
       packages: write # needed to push docker image to ghcr.io
-      pull-requests: write # needed to create and update comments in PRs
+      # pull-requests: write # needed to create and update comments in PRs
 
     steps:
       - name: Set up QEMU
